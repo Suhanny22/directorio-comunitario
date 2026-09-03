@@ -1,137 +1,208 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Directorio Comunitario</title><link rel="stylesheet" href="style.css">
-</head>
-<body><div class="portada">
-    <img src="portada.jpg" alt="Tinamaste, Pérez Zeledón">
-</div><div class="descripcion">
-    <p>
-        Una tranquila comunidad de montaña en Pérez Zeledón, Costa Rica,
-        ubicada en la ruta entre San Isidro de El General y Dominical.
-        Un lugar rodeado de naturaleza, donde encontrarás pequeños negocios,
-        emprendimientos, servicios y productos locales ofrecidos por personas
-        de la comunidad.
-    </p>
-</div>
+    <title>Directorio Comunitario</title>
 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- PORTADA -->
+    <div class="portada">
+        <img src="portada.jpg" alt="Tinamaste, Pérez Zeledón">
+    </div>
+
+
+    <!-- DESCRIPCIÓN DE LA COMUNIDAD -->
+    <div class="descripcion">
+
+        <p>
+            Una tranquila comunidad de montaña en Pérez Zeledón, Costa Rica,
+            ubicada en la ruta entre San Isidro de El General y Dominical.
+            Un lugar rodeado de naturaleza, donde encontrarás pequeños negocios,
+            emprendimientos, servicios y productos locales ofrecidos por personas
+            de la comunidad.
+        </p>
+
+    </div>
+
+
+    <!-- TÍTULO PRINCIPAL -->
     <h1>🌱 Directorio Comunitario</h1>
 
-    <h2>Encuentra negocios, productos y servicios de tu comunidad</h2>
 
-    <input 
-        type="text" 
+    <h2>
+        Encuentra negocios, productos y servicios de tu comunidad
+    </h2>
+
+
+    <!-- BUSCADOR -->
+    <input
+        type="text"
         placeholder="🔎 ¿Qué estás buscando?"
     >
 
+
     <h2>Categorías</h2>
 
-<section class="categorias">
 
-    <h2>Explora nuestra comunidad</h2>
+    <!-- CATEGORÍAS -->
+    <section class="categorias">
 
-    <p class="subtitulo">
-        Encuentra negocios, productos y servicios locales.
-    </p>
+        <h2>Explora nuestra comunidad</h2>
 
-    <div class="grid-categorias">
-
-        <button class="categoria-btn" data-categoria="Compras">
-            🛒
-            <span>Supermercados</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Comida">
-            🍔
-            <span>Comida</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Productos">
-            🛍️
-            <span>Productos</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Jardinería">
-            🌱
-            <span>Jardinería</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Limpieza">
-            🧹
-            <span>Limpieza</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Belleza">
-            💇
-            <span>Belleza</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Reparaciones">
-            🔧
-            <span>Reparaciones</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Transporte">
-            🚗
-            <span>Transporte</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Niños">
-            👨‍👩‍👧
-            <span>Niños</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Educación">
-            📚
-            <span>Educación</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Hogar">
-            🏠
-            <span>Alojamiento</span>
-        </button>
-
-        <button class="categoria-btn" data-categoria="Otros">
-            ➕
-            <span>Otros</span>
-        </button>
-
-    </div>
-
-</section>
+        <p class="subtitulo">
+            Encuentra negocios, productos y servicios locales.
+        </p>
 
 
-<section class="resultados">
+        <div class="grid-categorias">
 
-    <h2>Servicios de nuestra comunidad</h2>
 
-    <div class="ficha" data-categoria="Jardinería">
+            <!-- SUPERMERCADOS -->
+            <button
+                class="categoria-btn"
+                data-categoria="Compras"
+            >
+                🛒
+                <span>Supermercados</span>
+            </button>
 
-        <img src="portada.jpg" alt="Jardinería">
 
-        <div class="ficha-contenido">
+            <!-- COMIDA -->
+            <button
+                class="categoria-btn"
+                data-categoria="Comida"
+            >
+                🍔
+                <span>Comida</span>
+            </button>
 
-            <h3>Jardines Tinamaste</h3>
 
-            <p class="categoria">🌱 Jardinería</p>
+            <!-- PRODUCTOS -->
+            <button
+                class="categoria-btn"
+                data-categoria="Productos"
+            >
+                🛍️
+                <span>Productos</span>
+            </button>
 
-            <p>📍 Tinamaste, Pérez Zeledón</p>
 
-            <p>🕐 Lunes a sábado · 8:00 a.m. – 5:00 p.m.</p>
+            <!-- JARDINERÍA -->
+            <button
+                class="categoria-btn"
+                data-categoria="Jardinería"
+            >
+                🌱
+                <span>Jardinería</span>
+            </button>
 
-            <a href="#" class="whatsapp">
-                💬 Contactar por WhatsApp
-            </a>
+
+            <!-- LIMPIEZA -->
+            <button
+                class="categoria-btn"
+                data-categoria="Limpieza"
+            >
+                🧹
+                <span>Limpieza</span>
+            </button>
+
+
+            <!-- BELLEZA -->
+            <button
+                class="categoria-btn"
+                data-categoria="Belleza"
+            >
+                💇
+                <span>Belleza</span>
+            </button>
+
+
+            <!-- REPARACIONES -->
+            <button
+                class="categoria-btn"
+                data-categoria="Reparaciones"
+            >
+                🔧
+                <span>Reparaciones</span>
+            </button>
+
+
+            <!-- TRANSPORTE -->
+            <button
+                class="categoria-btn"
+                data-categoria="Transporte"
+            >
+                🚗
+                <span>Transporte</span>
+            </button>
+
+
+            <!-- NIÑOS -->
+            <button
+                class="categoria-btn"
+                data-categoria="Niños"
+            >
+                👨‍👩‍👧
+                <span>Niños</span>
+            </button>
+
+
+            <!-- EDUCACIÓN -->
+            <button
+                class="categoria-btn"
+                data-categoria="Educación"
+            >
+                📚
+                <span>Educación</span>
+            </button>
+
+
+            <!-- ALOJAMIENTO -->
+            <button
+                class="categoria-btn"
+                data-categoria="Hogar"
+            >
+                🏠
+                <span>Alojamiento</span>
+            </button>
+
+
+            <!-- OTROS -->
+            <button
+                class="categoria-btn"
+                data-categoria="Otros"
+            >
+                ➕
+                <span>Otros</span>
+            </button>
+
 
         </div>
 
-    </div>
+    </section>
 
-</section>
 
-<script src="script.js"></script>
+    <!-- RESULTADOS -->
+    <!--
+        Esta sección empieza vacía.
+        Los negocios aparecerán aquí
+        únicamente cuando se seleccione
+        una categoría.
+    -->
+
+    <section class="resultados"></section>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
 </body>
 
+</html>
