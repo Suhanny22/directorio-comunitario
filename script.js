@@ -1,4 +1,4 @@
-const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/XXXXXXXX/exec";
+const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbxdeXZYNbDZUMD60ljDh_9ADQbs5q0OCG6eXUJHuT17Qn-Dk5Ys0Glf26MFXM3SvNnW/exec";
 
 
 const botones = document.querySelectorAll(".categoria-btn");
