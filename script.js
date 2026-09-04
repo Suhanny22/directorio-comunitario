@@ -1,4 +1,4 @@
-const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbxdeXZYNbDZUMD60ljDh_9ADQbs5q0OCG6eXUJHuT17Qn-Dk5Ys0Glf26MFXM3SvNnW/exec";
+const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/XXXXXXXX/exec";
 
 
 const botones = document.querySelectorAll(".categoria-btn");
@@ -8,8 +8,9 @@ let negocios = [];
 let datosCargados = false;
 
 
-// Cargar negocios desde Google Sheets
+// Obtener los negocios desde Google Sheets
 fetch(URL_GOOGLE_SHEETS)
+
     .then(function(respuesta) {
 
         if (!respuesta.ok) {
@@ -19,6 +20,7 @@ fetch(URL_GOOGLE_SHEETS)
         return respuesta.json();
 
     })
+
     .then(function(datos) {
 
         negocios = datos;
@@ -27,6 +29,7 @@ fetch(URL_GOOGLE_SHEETS)
         console.log("Negocios recibidos:", negocios);
 
     })
+
     .catch(function(error) {
 
         console.error("Error:", error);
@@ -34,7 +37,33 @@ fetch(URL_GOOGLE_SHEETS)
     });
 
 
-// Botones de categorías
+// Convertir enlace de Google Drive en enlace para imagen
+function obtenerImagen(url) {
+
+    if (!url) {
+        return "";
+    }
+
+    const texto = String(url).trim();
+
+    // Buscar el ID del archivo
+    let coincidencia = texto.match(/id=([^&]+)/);
+
+    if (!coincidencia) {
+        coincidencia = texto.match(/\/d\/([^\/]+)/);
+    }
+
+    if (!coincidencia) {
+        return "";
+    }
+
+    const id = coincidencia[1];
+
+    return "https://drive.google.com/thumbnail?id=" + id + "&sz=w1000";
+}
+
+
+// Cuando se selecciona una categoría
 botones.forEach(function(boton) {
 
     boton.addEventListener("click", function() {
@@ -43,7 +72,6 @@ botones.forEach(function(boton) {
             boton.dataset.categoria;
 
 
-        // Si todavía no cargaron los datos
         if (!datosCargados) {
 
             resultados.innerHTML = `
@@ -58,7 +86,6 @@ botones.forEach(function(boton) {
         }
 
 
-        // Buscar negocios de esa categoría
         const negociosCategoria = negocios.filter(function(negocio) {
 
             return String(negocio["Categoría"] || "")
@@ -74,7 +101,6 @@ botones.forEach(function(boton) {
         `;
 
 
-        // No hay negocios
         if (negociosCategoria.length === 0) {
 
             resultados.innerHTML += `
@@ -87,7 +113,6 @@ botones.forEach(function(boton) {
         }
 
 
-        // Mostrar negocios
         negociosCategoria.forEach(function(negocio) {
 
             const ficha = document.createElement("div");
@@ -95,7 +120,24 @@ botones.forEach(function(boton) {
             ficha.className = "ficha";
 
 
+            const imagen = obtenerImagen(
+                negocio["Imagen del negocio, producto o servicio"]
+            );
+
+
             ficha.innerHTML = `
+
+                ${
+                    imagen
+                    ?
+                    `<img
+                        src="${imagen}"
+                        alt="${negocio["Nombre del negocio o persona"] || "Imagen del negocio"}"
+                        class="imagen-ficha"
+                    >`
+                    :
+                    ""
+                }
 
                 <div class="ficha-contenido">
 
