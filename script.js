@@ -1,270 +1,311 @@
 const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbxdeXZYNbDZUMD60ljDh_9ADQbs5q0OCG6eXUJHuT17Qn-Dk5Ys0Glf26MFXM3SvNnW/exec";
 
-
-const botones = document.querySelectorAll(".categoria-btn");
-const resultados = document.querySelector(".resultados");
-const buscador = document.querySelector('input[type="text"]');
-
 let negocios = [];
 
 
-// ========================================
-// CARGAR NEGOCIOS DESDE GOOGLE SHEETS
-// ========================================
+// ===============================
+// CARGAR NEGOCIOS
+// ===============================
 
 fetch(URL_GOOGLE_SHEETS)
+  .then(response => response.json())
+  .then(data => {
 
-    .then(function(respuesta) {
-        return respuesta.json();
-    })
+    negocios = data;
 
-    .then(function(datos) {
+    mostrarNegocios(negocios);
 
-        negocios = datos;
-
-        console.log("Negocios recibidos:", negocios);
-
-    })
-
-    .catch(function(error) {
-
-        console.error("No se pudieron cargar los negocios:", error);
-
-    });
+  })
+  .catch(error => {
+    console.error("Error cargando los negocios:", error);
+  });
 
 
-// ========================================
-// CONVERTIR ENLACE DE GOOGLE DRIVE
-// ========================================
+// ===============================
+// MOSTRAR NEGOCIOS
+// ===============================
 
-function obtenerImagen(url) {
+function mostrarNegocios(lista) {
 
-    if (!url) {
-        return "";
+  const contenedor = document.querySelector(".resultados");
+
+  if (!contenedor) return;
+
+  contenedor.innerHTML = "";
+
+  if (lista.length === 0) {
+    contenedor.innerHTML = `
+      <p class="sin-resultados">
+        No encontramos negocios o servicios con esa búsqueda.
+      </p>
+    `;
+    return;
+  }
+
+  lista.forEach(negocio => {
+
+    const nombre = negocio["Nombre del negocio o persona"] || "";
+    const categoria = negocio["Categoría"] || "";
+    const ubicacion = negocio["Ubicación"] || "";
+    const whatsapp = negocio["Número de WhatsApp"] || "";
+    const horario = negocio["Horario de atención"] || "";
+    const imagen = negocio["Imagen del negocio, producto o servicio"] || "";
+    const redes = negocio["Redes sociales"] || "";
+
+    // NUEVO:
+    // Esta es la pregunta que agregaste al formulario
+    const productoServicio =
+      negocio["¿Qué producto o servicio ofrece?"] || "";
+
+
+    // ===============================
+    // IMAGEN DE GOOGLE DRIVE
+    // ===============================
+
+    let imagenFinal = "";
+
+    if (imagen) {
+
+      let idImagen = "";
+
+      if (imagen.includes("open?id=")) {
+        idImagen = imagen.split("open?id=")[1].split("&")[0];
+      }
+
+      if (imagen.includes("/d/")) {
+        idImagen = imagen.split("/d/")[1].split("/")[0];
+      }
+
+      if (idImagen) {
+        imagenFinal =
+          `https://drive.google.com/thumbnail?id=${idImagen}&sz=w1000`;
+      }
     }
 
-    const texto = String(url).trim();
 
-    let coincidencia = texto.match(/id=([^&]+)/);
+    // ===============================
+    // WHATSAPP
+    // ===============================
 
-    if (!coincidencia) {
-        coincidencia = texto.match(/\/d\/([^\/]+)/);
+    let botonWhatsApp = "";
+
+    if (whatsapp) {
+
+      const numero = String(whatsapp)
+        .replace(/\D/g, "");
+
+      botonWhatsApp = `
+        <a
+          class="boton-whatsapp"
+          href="https://wa.me/${numero}"
+          target="_blank">
+          💬 WhatsApp
+        </a>
+      `;
     }
 
-    if (!coincidencia) {
-        return "";
+
+    // ===============================
+    // REDES SOCIALES
+    // ===============================
+
+    let botonRedes = "";
+
+    if (redes) {
+
+      let usuario = String(redes).trim();
+
+      if (!usuario.startsWith("http")) {
+        usuario = "https://instagram.com/" + usuario.replace("@", "");
+      }
+
+      botonRedes = `
+        <a
+          class="boton-redes"
+          href="${usuario}"
+          target="_blank">
+          📱 Redes sociales
+        </a>
+      `;
     }
 
-    const id = coincidencia[1];
 
-    return "https://drive.google.com/thumbnail?id=" + id + "&sz=w1000";
-}
+    // ===============================
+    // INFORMACIÓN EXTRA PARA "OTROS"
+    // ===============================
 
+    let informacionExtra = "";
 
-// ========================================
-// MOSTRAR UNA FICHA
-// ========================================
+    if (
+      categoria.toLowerCase().trim() === "otros" &&
+      productoServicio
+    ) {
 
-function crearFicha(negocio) {
-
-    const ficha = document.createElement("div");
-
-    ficha.className = "ficha";
-
-
-    const imagen = obtenerImagen(
-        negocio["Imagen del negocio, producto o servicio"]
-    );
+      informacionExtra = `
+        <p class="producto-servicio">
+          💡 <strong>Ofrece:</strong> ${productoServicio}
+        </p>
+      `;
+    }
 
 
-    ficha.innerHTML = `
+    // ===============================
+    // CREAR TARJETA
+    // ===============================
+
+    const tarjeta = document.createElement("article");
+
+    tarjeta.className = "ficha";
+
+    tarjeta.innerHTML = `
+
+      ${
+        imagenFinal
+          ? `
+            <img
+              class="imagen-ficha"
+              src="${imagenFinal}"
+              alt="${nombre}">
+          `
+          : ""
+      }
+
+      <div class="contenido-ficha">
+
+        <h3>${nombre}</h3>
+
+        <p class="categoria">
+          📌 ${categoria}
+        </p>
+
+        ${informacionExtra}
 
         ${
-            imagen
-            ?
-            `
-            <img
-                src="${imagen}"
-                alt="${negocio["Nombre del negocio o persona"] || "Imagen del negocio"}"
-                class="imagen-ficha"
-            >
-            `
-            :
-            ""
+          ubicacion
+            ? `<p>📍 ${ubicacion}</p>`
+            : ""
         }
 
+        ${
+          horario
+            ? `<p>🕒 ${horario}</p>`
+            : ""
+        }
 
-        <div class="ficha-contenido">
-
-            <h3>
-                ${negocio["Nombre del negocio o persona"] || ""}
-            </h3>
-
-
-            <p class="categoria">
-                📂 ${negocio["Categoría"] || ""}
-            </p>
-
-
-            <p>
-                📍 ${negocio["Ubicación"] || ""}
-            </p>
-
-
-            <p>
-                🕐 ${negocio["Horario de atención"] || ""}
-            </p>
-
-
-            <a
-                href="https://wa.me/${negocio["Número de WhatsApp"] || ""}"
-                class="whatsapp"
-                target="_blank"
-            >
-                💬 Contactar por WhatsApp
-            </a>
-
+        <div class="botones-ficha">
+          ${botonWhatsApp}
+          ${botonRedes}
         </div>
 
+      </div>
     `;
 
+    contenedor.appendChild(tarjeta);
 
-    return ficha;
+  });
+
 }
 
 
-// ========================================
-// MOSTRAR NEGOCIOS
-// ========================================
+// ===============================
+// FILTRO POR CATEGORÍA
+// ===============================
 
-function mostrarNegocios(lista, titulo) {
+document.querySelectorAll(".categoria-btn").forEach(boton => {
 
-    resultados.innerHTML = `
-        <h2>${titulo}</h2>
-    `;
+  boton.addEventListener("click", () => {
 
+    const categoriaSeleccionada =
+      boton.dataset.categoria;
 
-    if (lista.length === 0) {
+    if (categoriaSeleccionada === "Todos") {
 
-        resultados.innerHTML += `
-            <p class="sin-resultados">
-                Todavía no hay negocios publicados.
-            </p>
-        `;
+      mostrarNegocios(negocios);
 
-        return;
+      return;
     }
 
+    const filtrados = negocios.filter(negocio => {
 
-    lista.forEach(function(negocio) {
+      const categoria =
+        String(negocio["Categoría"] || "")
+          .trim()
+          .toLowerCase();
 
-        const ficha = crearFicha(negocio);
-
-        resultados.appendChild(ficha);
-
-    });
-}
-
-
-// ========================================
-// CATEGORÍAS
-// ========================================
-
-botones.forEach(function(boton) {
-
-    boton.addEventListener("click", function() {
-
-        const categoriaSeleccionada =
-            boton.dataset.categoria;
-
-
-        const negociosCategoria = negocios.filter(function(negocio) {
-
-            return String(
-                negocio["Categoría"] || ""
-            )
-            .trim()
-            .toLowerCase()
-            ===
-            categoriaSeleccionada
-            .trim()
-            .toLowerCase();
-
-        });
-
-
-        mostrarNegocios(
-            negociosCategoria,
-            categoriaSeleccionada
-        );
-
-
-        resultados.scrollIntoView({
-            behavior: "smooth"
-        });
+      return categoria ===
+        categoriaSeleccionada
+          .trim()
+          .toLowerCase();
 
     });
+
+    mostrarNegocios(filtrados);
+
+  });
 
 });
 
 
-// ========================================
+// ===============================
 // BUSCADOR
-// ========================================
+// ===============================
 
-buscador.addEventListener("input", function() {
+const buscador =
+  document.querySelector('input[type="text"]');
 
-    const texto = buscador.value
+if (buscador) {
+
+  buscador.addEventListener("input", () => {
+
+    const texto =
+      buscador.value
         .trim()
         .toLowerCase();
 
+    if (!texto) {
 
-    // Si está vacío, no mostramos resultados
-    if (texto === "") {
+      mostrarNegocios(negocios);
 
-        resultados.innerHTML = "";
-
-        return;
+      return;
     }
 
-
-    const resultadosBusqueda = negocios.filter(function(negocio) {
+    const resultados =
+      negocios.filter(negocio => {
 
         const nombre =
-            String(
-                negocio["Nombre del negocio o persona"] || ""
-            ).toLowerCase();
-
+          String(
+            negocio["Nombre del negocio o persona"] || ""
+          ).toLowerCase();
 
         const categoria =
-            String(
-                negocio["Categoría"] || ""
-            ).toLowerCase();
-
+          String(
+            negocio["Categoría"] || ""
+          ).toLowerCase();
 
         const ubicacion =
-            String(
-                negocio["Ubicación"] || ""
-            ).toLowerCase();
+          String(
+            negocio["Ubicación"] || ""
+          ).toLowerCase();
+
+        // NUEVO:
+        // También busca dentro de lo que ofrece
+        const productoServicio =
+          String(
+            negocio["¿Qué producto o servicio ofrece?"] || ""
+          ).toLowerCase();
 
 
         return (
-            nombre.includes(texto) ||
-            categoria.includes(texto) ||
-            ubicacion.includes(texto)
+          nombre.includes(texto) ||
+          categoria.includes(texto) ||
+          ubicacion.includes(texto) ||
+          productoServicio.includes(texto)
         );
 
-    });
+      });
 
+    mostrarNegocios(resultados);
 
-    mostrarNegocios(
-        resultadosBusqueda,
-        "Resultados de búsqueda"
-    );
+  });
 
-
-    resultados.scrollIntoView({
-        behavior: "smooth"
-    });
-
-});
+}
